@@ -13,25 +13,36 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0  # Shallow clones should be disabled for a better relevancy of analysis
+        env: 
+          ACTIONS_RUNNER_NODE: '20'
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           java-version: 17
           distribution: 'zulu' # Alternative distribution options are available
+        env: 
+          ACTIONS_RUNNER_NODE: '20'
       - name: Cache SonarCloud packages
         uses: actions/cache@v3
         with:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
+        env: 
+          ACTIONS_RUNNER_NODE: '20'
       - name: Cache Gradle packages
         uses: actions/cache@v3
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+        env: 
+          ACTIONS_RUNNER_NODE: '20'
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          env: ACTIONS_RUNNER_NODE:'20'
         run: ./gradlew build sonar --info
