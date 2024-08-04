@@ -17,7 +17,7 @@ public class RoleUseCase {
         return roleRepository.getRol(userId)
                 .doOnError(throwable ->
                         roleEventGateway.registerUnSuccessfullRoleDetailRecord
-                                (null, userId, ACTION, throwable).subscribe()
+                                (userId, ACTION, throwable).subscribe()
                 )
                 .doOnComplete(() ->
                         roleEventGateway.registerSuccessfullRoleDetailRecord(userId, ACTION).subscribe()

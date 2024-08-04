@@ -2,6 +2,7 @@ insumo para readme
 
 gradle ca --package=co.com.erikdhv --type=reactive --name=inventory --lombok=true --mutation=true --metrics=true
 
+gradle gda --type asynceventbus --name=RoleEvent
 
 build.gradle
 
