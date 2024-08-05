@@ -6,8 +6,8 @@ import reactor.core.publisher.Mono;
 public class RoleDetailEvent implements RoleEventGateway {
     @Override
     public Mono<Void> registerSuccessfullRoleDetailRecord(Integer userId, String action) {
-        return Mono.just(userId).flatMap(response ->
-                ReactiveDirectAsyncGateway. );
+        return null; /*Mono.just(userId).flatMap(response ->
+                ReactiveDirectAsyncGateway. );*/
     }
 
     @Override

@@ -1,6 +1,6 @@
 package co.com.erikdhv.events;
 
-import co.com.erikdhv.model.events.EventDataDTO;
+import co.com.erikdhv.model.events.EventData;
 import co.com.erikdhv.model.events.EventSpect;
 import co.com.erikdhv.model.events.gateways.EventType;
 import co.com.erikdhv.model.events.gateways.EventsGateway;
@@ -10,16 +10,12 @@ import org.reactivecommons.api.domain.DomainEventBus;
 import org.reactivecommons.async.impl.config.annotations.EnableDomainEventBus;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.format.annotation.DateTimeFormat;
 import reactor.core.publisher.Mono;
 
 import java.text.MessageFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.UUID;
-import java.util.logging.Level;
-
-import static reactor.core.publisher.Mono.from;
 
 @RequiredArgsConstructor
 @EnableDomainEventBus
@@ -45,33 +41,33 @@ public class ReactiveEventsGateway implements EventsGateway {
     @Override
     public <T> Mono<Void> emitDone(T requestInfo, T responseInfo, EventType eventType) {
         return Mono.just(buildEventData(requestInfo, responseInfo, eventType))
-                .flatMap(eventDataDTO -> getSpectEvent(eventType.getName(), eventDataDTO ))
+                .flatMap(eventData -> getSpectEvent(eventType.getName(), eventData))
                 .doOnSuccess(this::getLog)
                 .flatMap(this::emit);
     }
 
     @Override
     public <T> Mono<Void> emitReject(T requestInfo, Throwable exception, EventType eventType) {
-        return Mono.error(exception)
-                .onErrorResume();
+        return null; /*Mono.error(exception)
+                .onErrorResume();*/
     }
 
-    private EventDataDTO<Object, Object> buildEventData(Object request, Object response, EventType eventType){
-        return EventDataDTO.builder()
+    private EventData<Object, Object> buildEventData(Object request, Object response, EventType eventType){
+        return EventData.builder()
                 .request(request)
                 .response(response)
                 .eventType(eventType)
                 .build();
     }
 
-    private Mono<DomainEvent<?>> getSpectEvent(String eventName, EventDataDTO<?, ?> eventDataDto){
+    private Mono<DomainEvent<?>> getSpectEvent(String eventName, EventData<?, ?> eventData){
         return Mono.just(EventSpect.builder()
                 .type(eventName)
                 .component("")
                 .id(UUID.randomUUID().toString())
                 .time(DateTimeFormatter.ofPattern(DATE_FORMATED).format(LocalDateTime.now()))
                 .contentType(CONTENT_TYPE)
-                .data(eventDataDto)
+                .data(eventData)
                 .build()
             ).map(eventSpect -> new DomainEvent<>(eventName, eventSpect.getId(), eventSpect));
     }

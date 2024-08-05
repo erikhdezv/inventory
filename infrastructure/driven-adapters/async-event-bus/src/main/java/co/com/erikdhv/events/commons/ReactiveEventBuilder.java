@@ -6,7 +6,7 @@ import reactor.core.publisher.Mono;
 @UtilityClass
 public class ReactiveEventBuilder {
 
-    public static Mono<Object> buildEventData(){
+    /*public static Mono<Object> buildEventData(){
 
-    }
+    }*/
 }

@@ -11,5 +11,5 @@ public class EventSpect {
     protected String id;
     protected String time;
     protected String contentType;
-    protected EventDataDTO<?, ?> data;
+    protected EventData<?, ?> data;
 }

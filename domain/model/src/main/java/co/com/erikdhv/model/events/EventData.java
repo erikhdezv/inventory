@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 @Builder(toBuilder = true)
-public class EventDataDTO<T, K> {
+public class EventData<T, K> {
     private T request;
     private T response;
     private EventType eventType;
